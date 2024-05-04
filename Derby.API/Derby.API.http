@@ -1,0 +1,7 @@
+﻿@Derby.API_HostAddress = http://localhost:5108
+
+GET {{Derby.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+

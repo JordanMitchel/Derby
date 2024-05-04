@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 25.0.1706.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Derby.API", "Derby.API\Derby.API.csproj", "{7097CA89-E40E-409E-9BF0-0622F195850C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7097CA89-E40E-409E-9BF0-0622F195850C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7097CA89-E40E-409E-9BF0-0622F195850C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7097CA89-E40E-409E-9BF0-0622F195850C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7097CA89-E40E-409E-9BF0-0622F195850C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {23FDFA2A-3B20-4D3B-8FC5-23F2CB183365}
+	EndGlobalSection
+EndGlobal
