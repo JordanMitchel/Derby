@@ -1,11 +1,13 @@
-﻿namespace Derby.API.Services
+﻿using Derby.Domain.Models.DataModels;
+
+namespace Derby.API.Services
 {
     public interface IDerebitService
     {
-        public Task<DerebitLastTradeInstrument> GetLastTradeDataFromDerebitAsync(string instrumentName);
+        public Task<LastTrade> GetLastTradeDataFromDerebitAsync(string instrumentName);
 
-        public Task<DerebitInstruments> GetInstrumentsFromDerebitAsync();
+        public Task<Instruments> GetInstrumentsFromDerebitAsync();
 
-        public List<string> GetInstrumentNames(DerebitInstruments instruments);
+        public List<string> GetInstrumentNames(Instruments instruments);
     }
 }

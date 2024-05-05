@@ -1,4 +1,4 @@
-﻿namespace Derby.API
+﻿namespace Derby.Domain.Models.DataModels
 {
     public class TickStep
     {

@@ -1,10 +1,10 @@
 ﻿using System;
 using Newtonsoft.Json;
 
-namespace Derby.API
+namespace Derby.Domain.Models.DataModels
 {
-	public class Instrument
-	{
+    public class Instrument
+    {
         [JsonProperty("tick_size_steps")]
         public List<TickStep> TickStep { get; set; }
 
@@ -74,14 +74,14 @@ namespace Derby.API
         [JsonProperty("maker_comission")]
         public string MakerCommission { get; set; }
 
-		public string Kind { get; set; }
+        public string Kind { get; set; }
 
-		public string RFQ { get; set; }
+        public string RFQ { get; set; }
 
         [JsonProperty("price_index")]
         public string PriceIndex { get; set; }
 
 
-	}
+    }
 }
 
