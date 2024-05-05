@@ -1,4 +1,5 @@
-﻿using Derby.API.Services;
+﻿using AutoMapper;
+using Derby.API.Services;
 using Derby.Domain.Models.DataModels;
 using Derby.Domain.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,18 @@ namespace Derby.API.Controllers
         private readonly ILogger<InsturmentController> _logger;
         private readonly IDerebitService _derebitService;
         private readonly IInstrumentService _instrumentService;
+        private readonly IMapper _mapper;
 
         // GET: /<controller>/
-        public InsturmentController(ILogger<InsturmentController> logger, IDerebitService derebitService, IInstrumentService instrumentService)
+        public InsturmentController(ILogger<InsturmentController> logger,
+            IDerebitService derebitService,
+            IInstrumentService instrumentService,
+            IMapper mapper)
         {
             _logger = logger;
             _derebitService = derebitService;
             _instrumentService = instrumentService;
+            _mapper = mapper;
         }
 
 
@@ -32,12 +38,14 @@ namespace Derby.API.Controllers
         }
 
         [HttpPost("FetchInstrumentNamesFromDerebit")]
-        public async Task<List<string>> FetchInstruments()
+        public async Task<IActionResult> FetchInstruments()
         {
             var instruments = await _derebitService.GetInstrumentsFromDerebitAsync();
-            var instrumentNames = _derebitService.GetInstrumentNames(instruments);
+            var instrumentNames = _derebitService.GetInstruments(instruments);
             _logger.Log(LogLevel.Information, "Data recieved from Derebit API");
-            return instrumentNames;
+
+            await _instrumentService.CreateManyAsync(instrumentNames.ToList());
+            return Ok("Data successfully imported from Derebit");
         }
 
         [HttpPost("PostDummyInstrument")]
@@ -66,10 +74,21 @@ namespace Derby.API.Controllers
         }
 
         [HttpGet("GetNum")]
-
         public int GetNum()
         {
             return 2;
+        }
+
+
+        [HttpGet("DTOTest")]
+        public ActionResult<Strument> GetTest()
+        {
+            var hakiUser = new StrumentRequest();
+            hakiUser.hakiName = "Luffy";
+            hakiUser.word = "Kiya";
+
+            return Ok(_mapper.Map<Strument>(hakiUser));
+
         }
     }
 }

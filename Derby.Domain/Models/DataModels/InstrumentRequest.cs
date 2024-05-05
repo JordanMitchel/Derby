@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Derby.Domain.Models.DataModels
 {
-    public class Instrument
+    public class InstrumentRequest
     {
         [JsonProperty("tick_size_steps")]
         public List<TickStep> TickStep { get; set; }

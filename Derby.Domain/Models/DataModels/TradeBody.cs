@@ -8,7 +8,7 @@ namespace Derby.Domain.Models.DataModels
         [JsonProperty("has_more")]
         public bool HasMore { get; set; }
 
-        public List<Trade> trades { get; set; }
+        public List<TradeDTO> trades { get; set; }
     }
 }
 

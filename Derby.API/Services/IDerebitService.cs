@@ -1,4 +1,5 @@
 ﻿using Derby.Domain.Models.DataModels;
+using Derby.Domain.Models.Entities;
 
 namespace Derby.API.Services
 {
@@ -8,6 +9,6 @@ namespace Derby.API.Services
 
         public Task<Instruments> GetInstrumentsFromDerebitAsync();
 
-        public List<string> GetInstrumentNames(Instruments instruments);
+        public IEnumerable<Instrument> GetInstruments(Instruments instruments);
     }
 }
