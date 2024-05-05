@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Derby.Domain.Models.DataModels
 {
-    public class TradeDTO
+    public class TradeRequest
     {
         [JsonProperty("trade_id")]
         public string TradeId { get; set; }

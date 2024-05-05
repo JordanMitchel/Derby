@@ -16,19 +16,32 @@ namespace Derby.API.Services
 
         private IMapper _mapper;
 
-		public DerebitService(IMapper mapper)
+        private ILogger _logger;
+
+		public DerebitService(IMapper mapper, ILogger<DerebitService> logger)
 		{
 			_options = new RestClientOptions("https://test.deribit.com") { MaxTimeout = -1 };
 			_client = new RestClient(_options);
             _mapper = mapper;
+            _logger = logger;
 		}
 
-		public async Task<LastTrade> GetLastTradeDataFromDerebitAsync(string instrumentName)
+		public async Task<Trade> GetLastTradeDataFromDerebitAsync(string instrumentName)
 		{
             var request = new RestRequest($"/api/v2/public/get_last_trades_by_instrument?instrument_name={instrumentName}&count=1", Method.Get);
             RestResponse response = await _client.ExecuteAsync(request);
             var derebitInstrumentData = JsonConvert.DeserializeObject<LastTrade>(response.Content);
-			return derebitInstrumentData;
+            var tradeData = derebitInstrumentData.result.trades;
+            if (!tradeData.Any())
+            {
+                _logger.LogWarning($"Trade data not found for the instrument: {instrumentName}");
+                return new Trade();
+            }
+            List<TradeRequest> tradeRequestData = derebitInstrumentData.result.trades;
+
+            var tradeRequest = _mapper.Map<Trade>(tradeRequestData.FirstOrDefault());
+
+            return tradeRequest;
         }
 
         public async Task<Instruments> GetInstrumentsFromDerebitAsync()
@@ -40,24 +53,9 @@ namespace Derby.API.Services
             return derebitInstrumentData;
         }
 
-        //public List<string> GetInstruments(Instruments instruments)
-        //{
-        //    var instrumentNames = new HashSet<string>();
-        //    instruments.Result.Select(x => instrumentNames.Add(x.InstrumentName));
 
-        //    foreach (var instrumentName in instruments.Result.Select(x => x.InstrumentName))
-        //    {
-        //        instrumentNames.Add(instrumentName);
-        //    }
-        //    return instrumentNames.ToList();
-        //}
         public IEnumerable<Instrument> GetInstruments(Instruments instruments)
         {
-            //var instrumentList = instruments.Result.Select(x => _mapper.Map<Instrument>(x));
-            ////var formattedInstruments = _mapper.Map<IEnumerable<Instrument>>(instruments.Result);
-            //return instrumentList;
-            var from = instruments.Result[0];
-            var to = _mapper.Map<Instrument>(from);
             List<Instrument> instrumentdata = new List<Instrument>();
             foreach (var item in instruments.Result)
             {

@@ -12,7 +12,6 @@ namespace Derby.Domain.Models.Entities
         public string TradeId { get; set; }
         public string InstrumentName { get; set; }
         public string TickDirection { get; set; }
-        public string TradeSeq { get; set; }
         public decimal Amount { get; set; }
         public decimal MarkPrice { get; set; }
         public decimal IndexPrice { get; set; }
