@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using Derby.Domain.Models.Entities;
 using Hangfire;
 using Hangfire.Server;
 
@@ -7,36 +8,69 @@ namespace Derby.API.Services
 {
 	public class CronService : ICronService
 	{
-		public CronService()
+        private readonly ILogger _logger;
+        private readonly IDerebitService _derebitService;
+        private readonly IInstrumentService _instrumentService;
+        private readonly ITradeService _tradeService;
+        private static int _counter = 0;
+
+        public CronService(ILogger<CronService> logger,IDerebitService derebitService, IInstrumentService instrumentService,
+            ITradeService tradeService)
 		{
-		}
+            _logger = logger;
+            _derebitService = derebitService;
+            _instrumentService = instrumentService;
+            _tradeService = tradeService;
+        }
 
         [Queue("default")]
         [JobDisplayName("Display current date and time")]
-        public void FireOnceJob(PerformContext context)
+        public async Task FireOnceInstrumentJob(IServiceProvider serviceProvider)
         {
-            BackgroundJob.Enqueue("test_queue",() => Console.WriteLine($"The current date and time is: {DateTime.Now.ToString(CultureInfo.CurrentCulture)}"));
-            BackgroundJob.Enqueue<TradeService>(x => x.returnNum());
-            BackgroundJob.Enqueue<InstrumentService>("trade_queue", x => x.GetInstruments());
+            await SeedService.Seed(serviceProvider);
         }
     
 
-        public void RecurringDailyInstrumentJob()
+        public async Task<IEnumerable<Instrument>> RecurringDailyInstrumentJob() =>
+            await _instrumentService.GetInstruments();
+        
+
+        public async Task GetParallelLastTradesFromDerebitAsync()
         {
-            RecurringJob.AddOrUpdate<InstrumentService>(
-                "firstRecurringJob",
-                x => x.GetInstruments(),
-                Cron.Daily(10));
+            //get list of instruments
+            var instruments = await _instrumentService.GetInstruments();
 
 
-        }
+            if(_counter >= 200 || _counter * 20> instruments.Count())
+            {
+                _counter = 0;
+                _logger.LogInformation("One full loop of instruments, starting at first instrument");
+            }
+            var loopInstruments = instruments.Skip(_counter * 20).Take(20);
+            _logger.LogInformation($"INSTRUMENT COUNT : {_counter}");
+            Parallel.ForEach(loopInstruments, async instrument =>
+            {
+                new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0))
 
-        public void RecurringHourlyJob()
-        {
-            RecurringJob.AddOrUpdate<TradeService>(
-                "GoodMorning",
-                x => x.returnNum(),
-                Cron.Minutely());
+                };
+
+                var tradeData =
+                    await _derebitService.GetLastTradeDataFromDerebitAsync(instrument.InstrumentName);
+                if (tradeData.TradeId == null)
+                {
+                    _logger.LogWarning($"Couldn't find trade for instrument: {instrument.InstrumentName}");
+                }
+                else
+                {
+                    _logger.LogInformation($"Found trade for instrument: {instrument.InstrumentName}");
+                    await _tradeService.CreateAsync(tradeData);
+                }
+
+            });
+            _counter +=1;
+            _logger.LogInformation($"-------- counter value {_counter}");
         }
     }
 }

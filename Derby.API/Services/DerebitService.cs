@@ -44,6 +44,7 @@ namespace Derby.API.Services
             return tradeRequest;
         }
 
+
         public async Task<Instruments> GetInstrumentsFromDerebitAsync()
         {
             var request = new RestRequest($"/api/v2/public/get_instruments", Method.Get);

@@ -6,39 +6,16 @@ namespace Derby.API.Services
 {
 	public class SeedService
 	{
-        public static void Seed(IServiceProvider serviceProvider)
+        public IEnumerable<Instrument> _instruments = new List<Instrument>();
+        public static async Task Seed(IServiceProvider serviceProvider)
 		{
             IInstrumentService instrumentService = serviceProvider.GetRequiredService<IInstrumentService>();
-            ITradeService tradeService = serviceProvider.GetRequiredService<ITradeService>();
             IDerebitService derebitService = serviceProvider.GetRequiredService<IDerebitService>();
             ILogger logger = serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(typeof(SeedService).Name);
-            SeedInstruments(instrumentService, derebitService, logger);
-			SeedTrades(tradeService, instrumentService, derebitService, logger);
-
+            await SeedInstruments(instrumentService, derebitService, logger);
 		}
 
-        private static async void SeedTrades(ITradeService tradeService, IInstrumentService instrumentService, IDerebitService derebitService, ILogger logger)
-        {
-            var instrumentList = await instrumentService.GetInstruments();
-            if (instrumentList.Any())
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    var instrument = instrumentList.ToList() [i];
-                    var lastTradeI = await derebitService.GetLastTradeDataFromDerebitAsync(instrument.InstrumentName);
-                    if(lastTradeI.TradeId != null)
-                    {
-                        await tradeService.CreateAsync(lastTradeI);
-                    }
-                }
-            }
-            else
-            {
-                logger.LogWarning("no instruments, so cannot get last trades");
-            }
-        }
-
-        private static async void SeedInstruments(IInstrumentService instrumentService,
+        private static async Task SeedInstruments(IInstrumentService instrumentService,
             IDerebitService derebitService, ILogger logger)
         {
             var instrumentList = await instrumentService.GetInstruments();

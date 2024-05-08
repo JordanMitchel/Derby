@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Derby.Infrastructure", "Der
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Derby.Domain", "Derby.Domain\Derby.Domain.csproj", "{B3F96905-2D03-40EC-88CC-462F68878988}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Derby.TestSuite", "Derby.TestSuite\Derby.TestSuite.csproj", "{4BC7C963-CA27-4FA5-A4FC-BA1AB84A51B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B3F96905-2D03-40EC-88CC-462F68878988}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3F96905-2D03-40EC-88CC-462F68878988}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3F96905-2D03-40EC-88CC-462F68878988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BC7C963-CA27-4FA5-A4FC-BA1AB84A51B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BC7C963-CA27-4FA5-A4FC-BA1AB84A51B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BC7C963-CA27-4FA5-A4FC-BA1AB84A51B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BC7C963-CA27-4FA5-A4FC-BA1AB84A51B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

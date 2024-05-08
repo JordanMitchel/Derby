@@ -8,12 +8,12 @@ namespace Derby.API.Config
 	{
         public static void ConfigureJobs(this WebApplication app)
         {
-            app.Services.CreateScope();
+            //app.Services.CreateScope();
+            BackgroundJob.Enqueue(() => app.Services.GetService<ICronService>().RecurringDailyInstrumentJob());
+            RecurringJob.AddOrUpdate("InsertTrades",() => app.Services.GetService<ICronService>().GetParallelLastTradesFromDerebitAsync(),
+            " 0/1 * * * * *");
 
-            app.Services.GetService<ICronService>().FireOnceJob(null);
-            app.Services.GetService<ICronService>().RecurringDailyInstrumentJob();
-            //app.Services.GetService<ICronService>().FireOnceJob(null);
-            //app.Services.GetService<ICronService>().FireOnceJob(null);
+
 
         }
     }
