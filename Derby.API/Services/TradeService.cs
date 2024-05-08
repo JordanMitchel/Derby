@@ -27,7 +27,7 @@ namespace Derby.API.Services
             await _tradeCollection.Find(a => a.Id == id).FirstOrDefaultAsync();
 
         public async Task<Trade> GetByTradeId(string tradeId) =>
-            await _tradeCollection.Find(a => a.TradeId == tradeId).FirstOrDefaultAsync();
+            await _tradeCollection.Find(a => a.TradeId == tradeId).SingleOrDefaultAsync();
 
         public async Task<Trade> GetTradeByInstrumentName(string instrumentName)
         {

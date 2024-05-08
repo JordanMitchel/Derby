@@ -11,7 +11,7 @@ using MongoDB.Driver;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddScoped<IDerebitService, DerebitService>();
+builder.Services.AddSingleton<IDerebitService, DerebitService>();
 builder.Services.AddSingleton<ITradeService, TradeService>();
 builder.Services.AddSingleton<IInstrumentService, InstrumentService>();
 builder.Services.AddSingleton<SeedService>();
@@ -56,6 +56,7 @@ var app = builder.Build();
 using ( var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    await SeedService.Seed(services);
 }
 
 
@@ -72,8 +73,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseHangfireDashboard()
-    .UseHangfireServer();
+app.UseHangfireDashboard();
 
 HangfireJobConfiguration.ConfigureJobs(app);
 

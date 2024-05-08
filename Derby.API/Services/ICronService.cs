@@ -1,13 +1,16 @@
-﻿using Hangfire.Server;
+﻿using Derby.Domain.Models.Entities;
+using Hangfire.Server;
 
 namespace Derby.API.Services
 {
     public interface ICronService
     {
-        void RecurringDailyInstrumentJob();
+        Task FireOnceInstrumentJob(IServiceProvider serviceProvider);
 
-        void RecurringHourlyJob();
+        Task GetParallelLastTradesFromDerebitAsync();
 
-        void FireOnceJob(PerformContext context);
+        Task<IEnumerable<Instrument>> RecurringDailyInstrumentJob();
+
+
     }
 }
