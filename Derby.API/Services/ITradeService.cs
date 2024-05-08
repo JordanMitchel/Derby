@@ -22,6 +22,8 @@ namespace Derby.API.Services
 
         Task Update(Trade trade);
 
+        Task UpdateUpsert(Trade trade);
+
 
 
     }

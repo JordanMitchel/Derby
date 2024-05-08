@@ -55,17 +55,20 @@ namespace Derby.API.Services
                     MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0))
 
                 };
-
+                var windowTime = DateTime.UtcNow.AddSeconds(-300);
+                Console.WriteLine(windowTime);
+                DateTimeOffset dto = new DateTimeOffset(windowTime);
+                var timeRequestWindow = dto.ToUnixTimeMilliseconds();
                 var tradeData =
-                    await _derebitService.GetLastTradeDataFromDerebitAsync(instrument.InstrumentName);
+                    await _derebitService.GetLastTradeDataFromDerebitAsync(instrument.InstrumentName, timeRequestWindow);
                 if (tradeData.TradeId == null)
                 {
                     _logger.LogWarning($"Couldn't find trade for instrument: {instrument.InstrumentName}");
                 }
                 else
                 {
-                    _logger.LogInformation($"Found trade for instrument: {instrument.InstrumentName}");
-                    await _tradeService.CreateAsync(tradeData);
+                    _logger.LogInformation($"New trade for instrument: {instrument.InstrumentName}");
+                    await _tradeService.UpdateUpsert(tradeData);
                 }
 
             });
