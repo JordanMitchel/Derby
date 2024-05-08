@@ -1,4 +1,5 @@
 ﻿using System;
+using Derby.Domain.Models.DataModels;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -8,10 +9,6 @@ namespace Derby.API.Services
 	{
 		private RestClientOptions _options;
 
-		private RestRequest _request;
-
-		private RestResponse _restResponse;
-
 		private RestClient _client;
 
 		public DerebitService()
@@ -20,23 +17,23 @@ namespace Derby.API.Services
 			_client = new RestClient(_options);
 		}
 
-		public async Task<DerebitLastTradeInstrument> GetLastTradeDataFromDerebitAsync(string instrumentName)
+		public async Task<LastTrade> GetLastTradeDataFromDerebitAsync(string instrumentName)
 		{
             var request = new RestRequest($"/api/v2/public/get_last_trades_by_instrument?instrument_name={instrumentName}&count=1", Method.Get);
             RestResponse response = await _client.ExecuteAsync(request);
-            var derebitInstrumentData = JsonConvert.DeserializeObject<DerebitLastTradeInstrument>(response.Content);
+            var derebitInstrumentData = JsonConvert.DeserializeObject<LastTrade>(response.Content);
 			return derebitInstrumentData;
         }
 
-        public async Task<DerebitInstruments> GetInstrumentsFromDerebitAsync()
+        public async Task<Instruments> GetInstrumentsFromDerebitAsync()
         {
             var request = new RestRequest($"/api/v2/public/get_instruments", Method.Get);
 			RestResponse response = await _client.ExecuteAsync(request);
-            var derebitInstrumentData = JsonConvert.DeserializeObject<DerebitInstruments>(response.Content);
+            var derebitInstrumentData = JsonConvert.DeserializeObject<Instruments>(response.Content);
             return derebitInstrumentData;
         }
 
-		public List<string> GetInstrumentNames(DerebitInstruments instruments)
+		public List<string> GetInstrumentNames(Instruments instruments)
 		{
             var instrumentNames = new HashSet<string>();
             instruments.Result.Select(x => instrumentNames.Add(x.InstrumentName));
