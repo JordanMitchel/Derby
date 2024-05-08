@@ -47,6 +47,9 @@ namespace Derby.API.Services
             return trades.OrderBy(x => x.TimeStamp).ToList();
         }
 
+        public int returnNum() =>
+            5;
+
         public async Task CreateAsync(Trade trade) =>
             await _tradeCollection.InsertOneAsync(trade);
 

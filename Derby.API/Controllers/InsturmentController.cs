@@ -28,26 +28,6 @@ namespace Derby.API.Controllers
             _tradeService = tradeService;
         }
 
-
-        [HttpPost("FetchInstrumentDataFromDerebit")]
-        public async Task<Trade> FetchInstrumentData(string instrumentName)
-        {
-            var lastTradeData = _derebitService.GetLastTradeDataFromDerebitAsync(instrumentName);
-            _logger.Log(LogLevel.Information, "Data recieved from Derebit API");
-            return await lastTradeData;
-        }
-
-        [HttpPost("FetchInstrumentNamesFromDerebit")]
-        public async Task<IActionResult> FetchInstruments()
-        {
-            var instruments = await _derebitService.GetInstrumentsFromDerebitAsync();
-            var instrumentNames = _derebitService.GetInstruments(instruments);
-            _logger.Log(LogLevel.Information, "Data recieved from Derebit API");
-
-            await _instrumentService.CreateManyAsync(instrumentNames.ToList());
-            return Ok("Data successfully imported from Derebit");
-        }
-
         [HttpPost("PostDummyInstrument")]
         public async Task<IActionResult> PostDummyInstrument(Instrument instrument)
         {
