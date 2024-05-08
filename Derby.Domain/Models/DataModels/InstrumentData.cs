@@ -1,6 +1,6 @@
 ﻿namespace Derby.Domain.Models.DataModels
 {
-    public class InstrumentData
+    public abstract class InstrumentData
     {
         public string JsonRpc { get; set; }
         public long usIn { get; set; }

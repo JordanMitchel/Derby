@@ -4,7 +4,7 @@ namespace Derby.Domain.Models.DataModels
 {
     public class Instruments : InstrumentData
     {
-        public List<Instrument> Result { get; set; }
+        public List<InstrumentRequest> Result { get; set; }
     }
 }
 

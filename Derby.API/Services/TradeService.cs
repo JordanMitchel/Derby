@@ -29,6 +29,24 @@ namespace Derby.API.Services
         public async Task<Trade> GetByTradeId(string tradeId) =>
             await _tradeCollection.Find(a => a.TradeId == tradeId).FirstOrDefaultAsync();
 
+        public async Task<Trade> GetTradeByInstrumentName(string instrumentName)
+        {
+            var trades = await GetOrderedTradesByInstrumentName(instrumentName);
+            return trades.FirstOrDefault();
+        }
+
+        public async Task<List<Trade>> GetLatestTradesByInstrumentName(string instrumentName, int count)
+        {
+            var trades = await GetOrderedTradesByInstrumentName(instrumentName);
+            return trades.Take(count).ToList();
+        }
+
+        private async Task<List<Trade>> GetOrderedTradesByInstrumentName(string instrumentName)
+        {
+            var trades = await _tradeCollection.Find(a => a.InstrumentName == instrumentName).ToListAsync();
+            return trades.OrderBy(x => x.TimeStamp).ToList();
+        }
+
         public async Task CreateAsync(Trade trade) =>
             await _tradeCollection.InsertOneAsync(trade);
 
