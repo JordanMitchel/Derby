@@ -2,6 +2,7 @@
 using Derby.Domain.Models;
 using Derby.Domain.Models.Entities;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Derby.API.Services
@@ -60,6 +61,23 @@ namespace Derby.API.Services
         public async Task Update(Trade trade) =>
             await _tradeCollection.FindOneAndReplaceAsync(a=> a.Id == trade.Id,trade);
 
+        public async Task UpdateUpsert(Trade trade)
+        {
+            var filter = Builders<Trade>.Filter.Eq("TradeId", trade.TradeId);
+            var update = Builders<Trade>.Update
+                .Set("InstrumentName", trade.InstrumentName)
+                .Set("TickDirection", trade.TickDirection)
+                .Set("Amount", trade.Amount)
+                .Set("MarkPrice", trade.MarkPrice)
+                .Set("IndexPrice", trade.IndexPrice)
+                .Set("Direction", trade.Direction)
+                .Set("Price", trade.Price)
+                .Set("TimeStamp", trade.TimeStamp);
+
+            var options = new UpdateOptions { IsUpsert = true };
+
+            await _tradeCollection.UpdateOneAsync(filter, update, options);
+        }
     }
 }
 

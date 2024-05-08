@@ -22,7 +22,7 @@ namespace Derby.Domain.Models.DataModels
         public decimal Amount { get; set; }
 
         [JsonProperty("mark_price")]
-        public decimal MarkPrice { get; set; }
+        public decimal? MarkPrice { get; set; } = 0;
 
         [JsonProperty("index_price")]
         public decimal IndexPrice { get; set; }

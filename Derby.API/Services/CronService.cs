@@ -56,16 +56,20 @@ namespace Derby.API.Services
 
                 };
 
+                var windowTime = DateTime.UtcNow.AddSeconds(-300);
+                DateTimeOffset dto = new DateTimeOffset(windowTime);
+                var timeRequestWindow = dto.ToUnixTimeMilliseconds();
+
                 var tradeData =
-                    await _derebitService.GetLastTradeDataFromDerebitAsync(instrument.InstrumentName);
+                    await _derebitService.GetLastTradeDataFromDerebitAsync(instrument.InstrumentName, timeRequestWindow);
                 if (tradeData.TradeId == null)
                 {
                     _logger.LogWarning($"Couldn't find trade for instrument: {instrument.InstrumentName}");
                 }
                 else
                 {
-                    _logger.LogInformation($"Found trade for instrument: {instrument.InstrumentName}");
-                    await _tradeService.CreateAsync(tradeData);
+                    _logger.LogInformation($"New trade for instrument: {instrument.InstrumentName}");
+                    await _tradeService.UpdateUpsert(tradeData);
                 }
 
             });

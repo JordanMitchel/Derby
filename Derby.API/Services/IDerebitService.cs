@@ -5,7 +5,7 @@ namespace Derby.API.Services
 {
     public interface IDerebitService
     {
-        public Task<Trade> GetLastTradeDataFromDerebitAsync(string instrumentName);
+        public Task<Trade> GetLastTradeDataFromDerebitAsync(string instrumentName,long epochTime);
 
         public Task<Instruments> GetInstrumentsFromDerebitAsync();
 
