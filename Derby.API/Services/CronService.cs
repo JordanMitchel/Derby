@@ -55,10 +55,11 @@ namespace Derby.API.Services
                     MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling((Environment.ProcessorCount * 0.75) * 2.0))
 
                 };
+
                 var windowTime = DateTime.UtcNow.AddSeconds(-300);
-                Console.WriteLine(windowTime);
                 DateTimeOffset dto = new DateTimeOffset(windowTime);
                 var timeRequestWindow = dto.ToUnixTimeMilliseconds();
+
                 var tradeData =
                     await _derebitService.GetLastTradeDataFromDerebitAsync(instrument.InstrumentName, timeRequestWindow);
                 if (tradeData.TradeId == null)

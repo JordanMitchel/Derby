@@ -29,6 +29,7 @@ namespace Derby.API.Services
 		public async Task<Trade> GetLastTradeDataFromDerebitAsync(string instrumentName, long epochTime)
 		{
             var request = new RestRequest($"/api/v2/public/get_last_trades_by_instrument?instrument_name={instrumentName}&start_timestamp={epochTime}", Method.Get);
+            //var request = new RestRequest($"/api/v2/public/get_last_trades_by_instrument?instrument_name={instrumentName}&count={10}", Method.Get);
             RestResponse response = await _client.ExecuteAsync(request);
             var derebitInstrumentData = JsonConvert.DeserializeObject<LastTrade>(response.Content);
             var tradeData = derebitInstrumentData.result.trades;
